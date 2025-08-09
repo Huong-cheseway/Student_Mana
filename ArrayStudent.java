@@ -1,14 +1,23 @@
 package Studen_mana;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ArrayStudent {
     private ArrayList<Student> danhSachSinhVien;
+    private File fileLuu;
 
-    public ArrayStudent() {
+    public ArrayStudent(File fileLuu) {
         this.danhSachSinhVien = new ArrayList<>();
+        this.fileLuu = fileLuu;
     }
 
     public void themSinhVien(Student student) {
@@ -120,4 +129,38 @@ public class ArrayStudent {
         });
     }
 
+    public void luuDanhSachSinhVienVaoFile() {
+        try {
+            OutputStream op = new FileOutputStream(this.fileLuu);
+            ObjectOutputStream oos = new ObjectOutputStream(op);
+
+            for (Student student : danhSachSinhVien) {
+                oos.writeObject(student);
+            }
+            oos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void moFileLuuDanhSachSinhVien(File fileMo) {
+        try {
+            InputStream ip = new FileInputStream(fileMo);
+            ObjectInputStream ois = new ObjectInputStream(ip);
+
+            while (true) {
+                try {
+                    Student student = (Student) ois.readObject();
+                    this.danhSachSinhVien.add(student);
+                } catch (Exception e) {
+                    break;
+                }
+            }
+            ois.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
